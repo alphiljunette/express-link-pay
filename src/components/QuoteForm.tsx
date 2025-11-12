@@ -1,44 +1,95 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Calculator } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 const QuoteForm = () => {
-  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
   const [deliveryType, setDeliveryType] = useState<string>("");
   const [weight, setWeight] = useState<string>("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [deliveryLocation, setDeliveryLocation] = useState("");
+  const [senderName, setSenderName] = useState("");
+  const [senderEmail, setSenderEmail] = useState("");
+  const [senderPhone, setSenderPhone] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const calculatePrice = () => {
     if (!deliveryType || !weight) {
-      toast({
-        title: "Informations manquantes",
-        description: "Veuillez remplir tous les champs requis",
-        variant: "destructive",
-      });
-      return;
+      toast.error("Veuillez remplir tous les champs requis");
+      return null;
     }
 
     const weightNum = parseFloat(weight);
-    let basePrice = deliveryType === "local" ? 10 : 50;
-    let pricePerKg = deliveryType === "local" ? 2 : 15;
+    let basePrice = deliveryType === "local" ? 10 : deliveryType === "national" ? 30 : 50;
+    let pricePerKg = deliveryType === "local" ? 2 : deliveryType === "national" ? 5 : 15;
     
     const total = basePrice + (weightNum * pricePerKg);
     setEstimatedPrice(total);
     
-    toast({
-      title: "Devis calculé !",
-      description: `Prix estimé : ${total.toFixed(2)} €`,
-    });
+    toast.success(`Prix estimé : ${total.toFixed(2)} €`);
+    return total;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    calculatePrice();
+    
+    if (!user) {
+      toast.error("Vous devez être connecté pour créer un envoi");
+      navigate("/auth");
+      return;
+    }
+
+    const price = calculatePrice();
+    if (!price) return;
+
+    setSaving(true);
+
+    try {
+      const { error } = await supabase.from("shipments").insert({
+        user_id: user.id,
+        pickup_location: pickupLocation,
+        delivery_location: deliveryLocation,
+        delivery_type: deliveryType,
+        weight: parseFloat(weight),
+        estimated_price: price,
+        sender_name: senderName,
+        sender_email: senderEmail,
+        sender_phone: senderPhone,
+        status: "pending",
+      });
+
+      if (error) throw error;
+
+      toast.success("Votre demande d'envoi a été enregistrée!");
+      navigate("/my-shipments");
+    } catch (error: any) {
+      toast.error("Erreur lors de l'enregistrement");
+      console.error(error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -65,6 +116,8 @@ const QuoteForm = () => {
                   <Input 
                     id="pickup" 
                     placeholder="Ville ou adresse" 
+                    value={pickupLocation}
+                    onChange={(e) => setPickupLocation(e.target.value)}
                     required 
                   />
                 </div>
@@ -74,6 +127,8 @@ const QuoteForm = () => {
                   <Input 
                     id="delivery" 
                     placeholder="Ville ou adresse" 
+                    value={deliveryLocation}
+                    onChange={(e) => setDeliveryLocation(e.target.value)}
                     required 
                   />
                 </div>
@@ -87,7 +142,8 @@ const QuoteForm = () => {
                       <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="local">Locale (même pays)</SelectItem>
+                      <SelectItem value="local">Locale</SelectItem>
+                      <SelectItem value="national">Nationale</SelectItem>
                       <SelectItem value="international">Internationale</SelectItem>
                     </SelectContent>
                   </Select>
@@ -113,6 +169,8 @@ const QuoteForm = () => {
                   <Input 
                     id="name" 
                     placeholder="Votre nom" 
+                    value={senderName}
+                    onChange={(e) => setSenderName(e.target.value)}
                     required 
                   />
                 </div>
@@ -123,6 +181,8 @@ const QuoteForm = () => {
                     id="email" 
                     type="email" 
                     placeholder="votre@email.com" 
+                    value={senderEmail}
+                    onChange={(e) => setSenderEmail(e.target.value)}
                     required 
                   />
                 </div>
@@ -134,6 +194,8 @@ const QuoteForm = () => {
                   id="phone" 
                   type="tel" 
                   placeholder="+33 6 12 34 56 78" 
+                  value={senderPhone}
+                  onChange={(e) => setSenderPhone(e.target.value)}
                   required 
                 />
               </div>
@@ -150,9 +212,14 @@ const QuoteForm = () => {
                 </div>
               )}
 
-              <Button type="submit" size="lg" className="w-full text-lg">
-                Calculer le prix
+              <Button type="submit" size="lg" className="w-full text-lg" disabled={saving}>
+                {saving ? "Enregistrement..." : user ? "Créer l'envoi" : "Calculer le prix"}
               </Button>
+              {!user && (
+                <p className="text-sm text-muted-foreground text-center">
+                  Connectez-vous pour créer un envoi
+                </p>
+              )}
             </form>
           </Card>
         </div>

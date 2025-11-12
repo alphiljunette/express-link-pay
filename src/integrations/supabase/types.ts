@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      shipments: {
+        Row: {
+          created_at: string
+          delivery_location: string
+          delivery_type: string
+          estimated_price: number
+          id: string
+          pickup_location: string
+          recipient_name: string | null
+          recipient_phone: string | null
+          sender_email: string
+          sender_name: string
+          sender_phone: string
+          status: string
+          tracking_number: string | null
+          updated_at: string
+          user_id: string | null
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          delivery_location: string
+          delivery_type: string
+          estimated_price: number
+          id?: string
+          pickup_location: string
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          sender_email: string
+          sender_name: string
+          sender_phone: string
+          status?: string
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+          weight: number
+        }
+        Update: {
+          created_at?: string
+          delivery_location?: string
+          delivery_type?: string
+          estimated_price?: number
+          id?: string
+          pickup_location?: string
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          sender_email?: string
+          sender_name?: string
+          sender_phone?: string
+          status?: string
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+          weight?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
