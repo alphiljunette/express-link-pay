@@ -6,9 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Calculator } from "lucide-react";
+import { Calculator, CreditCard, Smartphone, Building2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const QuoteForm = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const QuoteForm = () => {
   const [senderName, setSenderName] = useState("");
   const [senderEmail, setSenderEmail] = useState("");
   const [senderPhone, setSenderPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("card");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -198,6 +200,42 @@ const QuoteForm = () => {
                   onChange={(e) => setSenderPhone(e.target.value)}
                   required 
                 />
+              </div>
+
+              <div className="space-y-4 p-6 bg-muted/30 rounded-lg border">
+                <Label className="text-lg font-semibold">Mode de paiement</Label>
+                <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <div className="flex items-center space-x-3 p-3 rounded-md hover:bg-muted/50 transition-colors">
+                    <RadioGroupItem value="card" id="card" />
+                    <Label htmlFor="card" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <CreditCard className="w-5 h-5 text-primary" />
+                      <div>
+                        <div className="font-medium">Carte Bancaire</div>
+                        <div className="text-sm text-muted-foreground">Visa, Mastercard, Amex</div>
+                      </div>
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 rounded-md hover:bg-muted/50 transition-colors">
+                    <RadioGroupItem value="paypal" id="paypal" />
+                    <Label htmlFor="paypal" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <Smartphone className="w-5 h-5 text-primary" />
+                      <div>
+                        <div className="font-medium">PayPal</div>
+                        <div className="text-sm text-muted-foreground">Paiement rapide et sécurisé</div>
+                      </div>
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 rounded-md hover:bg-muted/50 transition-colors">
+                    <RadioGroupItem value="bank" id="bank" />
+                    <Label htmlFor="bank" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <Building2 className="w-5 h-5 text-primary" />
+                      <div>
+                        <div className="font-medium">Virement Bancaire</div>
+                        <div className="text-sm text-muted-foreground">Pour les entreprises</div>
+                      </div>
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
 
               {estimatedPrice !== null && (

@@ -34,6 +34,21 @@ const NavBar = () => {
           </Link>
           
           <div className="flex items-center gap-4">
+            <a href="#about">
+              <Button variant="ghost" size="sm">
+                À propos
+              </Button>
+            </a>
+            <a href="#faq">
+              <Button variant="ghost" size="sm">
+                FAQ
+              </Button>
+            </a>
+            <a href="#terms">
+              <Button variant="ghost" size="sm">
+                Conditions générales
+              </Button>
+            </a>
             {user ? (
               <>
                 <Link to="/my-shipments">
