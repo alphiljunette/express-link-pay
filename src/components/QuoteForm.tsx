@@ -212,9 +212,21 @@ const QuoteForm = () => {
                 </div>
               )}
 
-              <Button type="submit" size="lg" className="w-full text-lg" disabled={saving}>
-                {saving ? "Enregistrement..." : user ? "Créer l'envoi" : "Calculer le prix"}
-              </Button>
+              <div className="flex gap-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 text-lg" 
+                  onClick={calculatePrice}
+                >
+                  <Calculator className="w-5 h-5 mr-2" />
+                  Calculer le prix
+                </Button>
+                <Button type="submit" size="lg" className="flex-1 text-lg" disabled={saving || !user}>
+                  {saving ? "Enregistrement..." : "Créer l'envoi"}
+                </Button>
+              </div>
               {!user && (
                 <p className="text-sm text-muted-foreground text-center">
                   Connectez-vous pour créer un envoi
