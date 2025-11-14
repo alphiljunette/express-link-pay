@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import MyShipments from "./pages/MyShipments";
+import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Terms from "./pages/Terms";
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/my-shipments" element={<MyShipments />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/terms" element={<Terms />} />
