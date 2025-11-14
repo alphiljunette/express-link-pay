@@ -106,7 +106,7 @@ const QuoteForm = () => {
               </h2>
             </div>
             <p className="text-xl text-muted-foreground">
-              Obtenez un devis instantané pour votre livraison
+              Obtenez un devis instantané pour le transport de votre colis entre nos agences
             </p>
           </div>
 
@@ -114,10 +114,10 @@ const QuoteForm = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="pickup">Lieu de ramassage</Label>
+                  <Label htmlFor="pickup">Agence de dépôt (ville)</Label>
                   <Input 
                     id="pickup" 
-                    placeholder="Ville ou adresse" 
+                    placeholder="Ville de dépôt" 
                     value={pickupLocation}
                     onChange={(e) => setPickupLocation(e.target.value)}
                     required 
@@ -125,10 +125,10 @@ const QuoteForm = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="delivery">Lieu de livraison</Label>
+                  <Label htmlFor="delivery">Agence de destination (ville)</Label>
                   <Input 
                     id="delivery" 
-                    placeholder="Ville ou adresse" 
+                    placeholder="Ville de destination" 
                     value={deliveryLocation}
                     onChange={(e) => setDeliveryLocation(e.target.value)}
                     required 

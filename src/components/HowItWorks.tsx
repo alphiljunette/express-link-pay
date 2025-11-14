@@ -10,8 +10,8 @@ const HowItWorks = () => {
     },
     {
       icon: MapPin,
-      title: "2. Ramassage",
-      description: "Nous récupérons votre colis à l'adresse indiquée"
+      title: "2. Déposez votre colis",
+      description: "Vous déposez votre colis à notre agence la plus proche"
     },
     {
       icon: Truck,
@@ -20,8 +20,8 @@ const HowItWorks = () => {
     },
     {
       icon: CheckCircle,
-      title: "4. Livraison",
-      description: "Réception confirmée avec preuve de livraison"
+      title: "4. Récupération",
+      description: "Vous récupérez votre colis à l'agence de destination"
     }
   ];
 
