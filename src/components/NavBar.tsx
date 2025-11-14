@@ -34,21 +34,21 @@ const NavBar = () => {
           </Link>
           
           <div className="flex items-center gap-4">
-            <a href="#about">
+            <Link to="/about">
               <Button variant="ghost" size="sm">
                 À propos
               </Button>
-            </a>
-            <a href="#faq">
+            </Link>
+            <Link to="/faq">
               <Button variant="ghost" size="sm">
                 FAQ
               </Button>
-            </a>
-            <a href="#terms">
+            </Link>
+            <Link to="/terms">
               <Button variant="ghost" size="sm">
                 Conditions générales
               </Button>
-            </a>
+            </Link>
             {user ? (
               <>
                 <Link to="/my-shipments">
