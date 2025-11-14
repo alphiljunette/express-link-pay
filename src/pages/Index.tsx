@@ -4,10 +4,7 @@ import Services from "@/components/Services";
 import HowItWorks from "@/components/HowItWorks";
 import Pricing from "@/components/Pricing";
 import QuoteForm from "@/components/QuoteForm";
-import AboutUs from "@/components/AboutUs";
-import FAQ from "@/components/FAQ";
 import PaymentMethods from "@/components/PaymentMethods";
-import TermsAndConditions from "@/components/TermsAndConditions";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -19,10 +16,7 @@ const Index = () => {
       <HowItWorks />
       <Pricing />
       <QuoteForm />
-      <AboutUs />
-      <FAQ />
       <PaymentMethods />
-      <TermsAndConditions />
       <Footer />
     </div>
   );

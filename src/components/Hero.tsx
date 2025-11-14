@@ -42,6 +42,7 @@ const Hero = () => {
               <Button 
                 size="lg" 
                 variant="outline"
+                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
                 className="text-lg bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30"
               >
                 Nos Services
